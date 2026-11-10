@@ -1,22 +1,35 @@
+
 import mongoose from 'mongoose';
 
-/**
- * Connect to MongoDB with robust connection management,
- * connection pooling, and event listeners.
- */
 const connectDB = async () => {
+  const mongoURI =
+    process.env.MONGO_URI?.trim() ||
+    process.env.MONGO_URL?.trim() ||
+    process.env.MONGODB_URI?.trim();
+
+  // Never silently fall back to localhost in production
+  if (!mongoURI) {
+    throw new Error(
+      'MongoDB URI is missing. Check Railway environment variables.'
+    );
+  }
+
+  // Validate the connection string without exposing credentials
+  if (!/^mongodb(\+srv)?:\/\//i.test(mongoURI)) {
+    throw new Error(
+      'Invalid MongoDB URI. It must start with mongodb:// or mongodb+srv://'
+    );
+  }
+
   try {
-    const mongoURI =
-      process.env.MONGO_URI ||
-      process.env.MONGO_URL ||
-      process.env.MONGODB_URI ||
-      'mongodb://127.0.0.1:27017/brainfy';
     const conn = await mongoose.connect(mongoURI, {
-      serverSelectionTimeoutMS: 5000,
-      autoIndex: process.env.NODE_ENV !== 'production', // Build indexes only in development
+      serverSelectionTimeoutMS: 10000,
+      autoIndex: process.env.NODE_ENV !== 'production',
     });
 
-    console.log(`[MongoDB] Connected: ${conn.connection.host}/${conn.connection.name}`);
+    console.log(
+      `[MongoDB] Connected successfully: ${conn.connection.host}/${conn.connection.name}`
+    );
 
     mongoose.connection.on('error', (err) => {
       console.error('[MongoDB] Connection error:', err.message);
@@ -28,13 +41,9 @@ const connectDB = async () => {
 
     return conn;
   } catch (error) {
-    console.error(`[MongoDB] Initial connection error: ${error.message}`);
-    // Do not crash the entire process immediately in development so health check works
-    if (process.env.NODE_ENV === 'production') {
-      process.exit(1);
-    }
+    console.error('[MongoDB] Initial connection error:', error.message);
+    throw error;
   }
 };
 
 export default connectDB;
-
