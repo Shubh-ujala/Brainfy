@@ -124,19 +124,19 @@ git push -u origin main
 4. Add Environment Variable:
    - Click **Environment Variables**:
      - Key: `VITE_API_BASE_URL`
-     - Value: `https://your-backend.up.railway.app/api`
+     - Value: `https://brainfy-production.up.railway.app/api`
      *(⚠️ Important: Ensure `/api` is included at the end and no trailing slash)*.
 5. Click **Deploy**.
    - Vercel will build the frontend in ~20-30 seconds.
-   - You will receive a live URL (e.g., `https://brainfy.vercel.app`).
+   - Your live site: `https://fe-brainfy.vercel.app`.
 
 ---
 
 ## Step 5: Final Check & Polish
 
-1. In your **Railway backend**, go to **Variables** and verify `CLIENT_URL` includes your live Vercel frontend URL:
+1. In your **Railway backend**, go to **Variables** and verify `CLIENT_URL` is set to your live Vercel URL:
    ```
-   CLIENT_URL=https://brainfy.vercel.app
+   CLIENT_URL=https://fe-brainfy.vercel.app
    ```
    *(Note: The Brainfy backend automatically accepts all `*.vercel.app` domains out of the box).*
 2. Open your live Vercel URL in your browser:
