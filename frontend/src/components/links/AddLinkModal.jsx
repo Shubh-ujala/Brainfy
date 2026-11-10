@@ -17,7 +17,7 @@ import toast from 'react-hot-toast';
 
 const EMPTY = { title: '', url: '', description: '', collectionId: 'none', tags: [] };
 
-const AddLinkModal = ({ open, onClose, onSave }) => {
+const AddLinkModal = ({ open, onClose, onSave, defaultCollectionId }) => {
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [tagInput, setTagInput] = useState('');
@@ -26,14 +26,14 @@ const AddLinkModal = ({ open, onClose, onSave }) => {
 
   useEffect(() => {
     if (open) {
-      setForm(EMPTY);
+      setForm({ ...EMPTY, collectionId: defaultCollectionId || 'none' });
       setErrors({});
       setTagInput('');
       collectionService.getCollections()
         .then(r => setCollections(extractList(r, 'collections')))
         .catch(() => {});
     }
-  }, [open]);
+  }, [open, defaultCollectionId]);
 
   const validate = () => {
     const e = {};
@@ -43,7 +43,7 @@ const AddLinkModal = ({ open, onClose, onSave }) => {
       try {
         new URL(form.url);
       } catch {
-        e.url = 'Enter a valid URL (e.g. https://example.com)';
+        e.url = 'Enter a valid URL starting with https://';
       }
     }
     return e;
@@ -116,7 +116,7 @@ const AddLinkModal = ({ open, onClose, onSave }) => {
             </div>
             <Input
               id="url"
-              placeholder="https://example.com"
+              placeholder="https://..."
               value={form.url}
               onChange={handleChange('url')}
               className={errors.url ? 'border-destructive' : ''}
@@ -129,7 +129,7 @@ const AddLinkModal = ({ open, onClose, onSave }) => {
             <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              placeholder="e.g. React 19 Documentation"
+              placeholder="Title (leave empty to auto-detect from URL)"
               value={form.title}
               onChange={handleChange('title')}
             />
@@ -140,7 +140,7 @@ const AddLinkModal = ({ open, onClose, onSave }) => {
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              placeholder="Brief summary or notes about this link…"
+              placeholder="Add personal notes, key takeaways, or context…"
               value={form.description}
               onChange={handleChange('description')}
               rows={2}
@@ -171,7 +171,7 @@ const AddLinkModal = ({ open, onClose, onSave }) => {
             <Label>Tags</Label>
             <div className="flex gap-2">
               <Input
-                placeholder="Add tag and press Enter…"
+                placeholder="Add a tag and press Enter…"
                 value={tagInput}
                 onChange={e => setTagInput(e.target.value)}
                 onKeyDown={e => {

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Link2 } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { Plus, Link2, FolderOpen, X } from 'lucide-react';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import LinkCard from '@/components/links/LinkCard';
 import AddLinkModal from '@/components/links/AddLinkModal';
@@ -17,16 +19,38 @@ import { PLATFORM_OPTIONS, SORT_OPTIONS } from '@/utils/constants';
 import toast from 'react-hot-toast';
 
 const AllLinksPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialCollection = searchParams.get('collection') || 'all';
+
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [platform, setPlatform] = useState('all');
   const [sort, setSort] = useState('newest');
-  const [collection, setCollection] = useState('all');
+  const [collection, setCollection] = useState(initialCollection);
   const [collections, setCollections] = useState([]);
   const [addOpen, setAddOpen] = useState(false);
   const [editLink, setEditLink] = useState(null);
   const [deleteLink, setDeleteLink] = useState(null);
+
+  // Sync state if URL query param changes
+  useEffect(() => {
+    const param = searchParams.get('collection') || 'all';
+    setCollection(param);
+  }, [searchParams]);
+
+  const handleCollectionChange = (val) => {
+    setCollection(val);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      if (val && val !== 'all') {
+        next.set('collection', val);
+      } else {
+        next.delete('collection');
+      }
+      return next;
+    });
+  };
 
   const fetchLinks = useCallback(async () => {
     setLoading(true);
@@ -71,15 +95,38 @@ const AllLinksPage = () => {
     }
   };
 
+  const activeCollection = collections.find((c) => c._id === collection);
+
   return (
     <DashboardLayout>
       <div className="p-6 max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-foreground">All Saved Links</h1>
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                {activeCollection ? activeCollection.name : 'All Saved Links'}
+              </h1>
+              {activeCollection && (
+                <Badge variant="secondary" className="gap-1.5 font-medium text-xs py-0.5">
+                  <FolderOpen size={13} className="text-muted-foreground" />
+                  Collection
+                  <button
+                    type="button"
+                    onClick={() => handleCollectionChange('all')}
+                    className="ml-1 text-muted-foreground hover:text-foreground"
+                    title="Show all links"
+                  >
+                    <X size={12} />
+                  </button>
+                </Badge>
+              )}
+            </div>
             <p className="text-muted-foreground text-sm mt-0.5">
-              {!loading && `${links.length} link${links.length !== 1 ? 's' : ''} in library`}
+              {!loading &&
+                `${links.length} link${links.length !== 1 ? 's' : ''} ${
+                  activeCollection ? 'in this collection' : 'in library'
+                }`}
             </p>
           </div>
           <Button onClick={() => setAddOpen(true)} className="gap-2">
@@ -110,8 +157,8 @@ const AllLinksPage = () => {
             </SelectContent>
           </Select>
 
-          <Select value={collection} onValueChange={setCollection}>
-            <SelectTrigger className="w-40">
+          <Select value={collection} onValueChange={handleCollectionChange}>
+            <SelectTrigger className="w-44">
               <SelectValue placeholder="Collection" />
             </SelectTrigger>
             <SelectContent>
@@ -129,6 +176,7 @@ const AllLinksPage = () => {
               <SelectValue placeholder="Sort" />
             </SelectTrigger>
             <SelectContent>
+              <SelectItem value="all">All Platforms</SelectItem>
               {SORT_OPTIONS.map((o) => (
                 <SelectItem key={o.value} value={o.value}>
                   {o.label}
@@ -148,14 +196,26 @@ const AllLinksPage = () => {
         ) : links.length === 0 ? (
           <EmptyState
             icon={Link2}
-            title={search ? 'No links found matching your criteria' : 'No links saved yet'}
+            title={
+              search
+                ? 'No links found matching your criteria'
+                : activeCollection
+                ? `No links in "${activeCollection.name}" yet`
+                : 'No links saved yet'
+            }
             description={
               search
                 ? 'Try refining your search terms or clearing selected filters.'
+                : activeCollection
+                ? 'Save bookmarks and assign them to this collection to see them here.'
                 : 'Save bookmarks, articles, repositories, and videos to start building your library.'
             }
             action={
-              !search ? (
+              activeCollection ? (
+                <Button onClick={() => setAddOpen(true)} className="gap-2">
+                  <Plus size={15} /> Add Link to this collection
+                </Button>
+              ) : !search ? (
                 <Button onClick={() => setAddOpen(true)} className="gap-2">
                   <Plus size={15} /> Save your first link
                 </Button>
@@ -165,7 +225,7 @@ const AllLinksPage = () => {
                   onClick={() => {
                     setSearch('');
                     setPlatform('all');
-                    setCollection('all');
+                    handleCollectionChange('all');
                   }}
                 >
                   Reset filters
@@ -188,7 +248,12 @@ const AllLinksPage = () => {
         )}
       </div>
 
-      <AddLinkModal open={addOpen} onClose={() => setAddOpen(false)} onSave={fetchLinks} />
+      <AddLinkModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        defaultCollectionId={collection !== 'all' ? collection : undefined}
+        onSave={fetchLinks}
+      />
       <EditLinkModal open={!!editLink} link={editLink} onClose={() => setEditLink(null)} onSave={fetchLinks} />
       <DeleteConfirmModal
         open={!!deleteLink}

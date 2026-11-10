@@ -88,7 +88,7 @@ const LoginPage = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder="you@domain.com"
                   value={form.email}
                   onChange={handleChange('email')}
                   className={errors.email ? 'border-destructive' : ''}
@@ -109,7 +109,7 @@ const LoginPage = () => {
                   <Input
                     id="password"
                     type={showPass ? 'text' : 'password'}
-                    placeholder="••••••••"
+                    placeholder="Enter your password"
                     value={form.password}
                     onChange={handleChange('password')}
                     className={`pr-10 ${errors.password ? 'border-destructive' : ''}`}

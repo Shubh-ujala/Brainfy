@@ -99,7 +99,7 @@ const RegisterPage = () => {
                 <Label htmlFor="fullName">Full Name</Label>
                 <Input
                   id="fullName"
-                  placeholder="John Doe"
+                  placeholder="Your full name"
                   value={form.fullName}
                   onChange={handleChange('fullName')}
                   className={errors.fullName ? 'border-destructive' : ''}
@@ -114,7 +114,7 @@ const RegisterPage = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="name@example.com"
+                  placeholder="you@domain.com"
                   value={form.email}
                   onChange={handleChange('email')}
                   className={errors.email ? 'border-destructive' : ''}
@@ -130,7 +130,7 @@ const RegisterPage = () => {
                   <Input
                     id="password"
                     type={showPass ? 'text' : 'password'}
-                    placeholder="••••••••"
+                    placeholder="Create a password (min 6 characters)"
                     value={form.password}
                     onChange={handleChange('password')}
                     className={`pr-10 ${errors.password ? 'border-destructive' : ''}`}
@@ -169,7 +169,7 @@ const RegisterPage = () => {
                 <Input
                   id="confirmPassword"
                   type={showPass ? 'text' : 'password'}
-                  placeholder="••••••••"
+                  placeholder="Re-enter your password"
                   value={form.confirmPassword}
                   onChange={handleChange('confirmPassword')}
                   className={errors.confirmPassword ? 'border-destructive' : ''}

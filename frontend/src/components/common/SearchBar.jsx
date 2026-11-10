@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const SearchBar = ({ value, onChange, placeholder = 'Search…', className = '', enableShortcut = true }) => {
+const SearchBar = ({ value, onChange, placeholder = 'Search bookmarks, tags, URLs…', className = '', enableShortcut = true }) => {
   const inputRef = useRef(null);
 
   useEffect(() => {

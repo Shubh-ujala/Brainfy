@@ -47,7 +47,7 @@ const EditLinkModal = ({ open, onClose, link, onSave }) => {
       try {
         new URL(form.url);
       } catch {
-        e.url = 'Enter a valid URL (e.g. https://example.com)';
+        e.url = 'Enter a valid URL starting with https://';
       }
     }
     return e;
@@ -119,7 +119,7 @@ const EditLinkModal = ({ open, onClose, link, onSave }) => {
             </div>
             <Input
               id="edit-url"
-              placeholder="https://example.com"
+              placeholder="https://..."
               value={form.url}
               onChange={handleChange('url')}
               className={errors.url ? 'border-destructive' : ''}
@@ -131,7 +131,7 @@ const EditLinkModal = ({ open, onClose, link, onSave }) => {
             <Label htmlFor="edit-title">Title</Label>
             <Input
               id="edit-title"
-              placeholder="Link title"
+              placeholder="Enter link title"
               value={form.title}
               onChange={handleChange('title')}
             />
@@ -141,7 +141,7 @@ const EditLinkModal = ({ open, onClose, link, onSave }) => {
             <Label htmlFor="edit-desc">Description</Label>
             <Textarea
               id="edit-desc"
-              placeholder="Brief description…"
+              placeholder="Add notes, key takeaways, or context…"
               value={form.description}
               onChange={handleChange('description')}
               rows={2}
@@ -170,7 +170,7 @@ const EditLinkModal = ({ open, onClose, link, onSave }) => {
             <Label>Tags</Label>
             <div className="flex gap-2">
               <Input
-                placeholder="Add tag and press Enter…"
+                placeholder="Add a tag and press Enter…"
                 value={tagInput}
                 onChange={e => setTagInput(e.target.value)}
                 onKeyDown={e => {

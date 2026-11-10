@@ -78,7 +78,7 @@ const CollectionModal = ({ open, onClose, collection, onSave }) => {
             </Label>
             <Input
               id="c-name"
-              placeholder="e.g. Design Inspiration, Dev Tools, Articles"
+              placeholder="e.g. Developer Tools, Research, Reading List"
               value={form.name}
               onChange={(e) => {
                 setForm((p) => ({ ...p, name: e.target.value }));
@@ -93,7 +93,7 @@ const CollectionModal = ({ open, onClose, collection, onSave }) => {
             <Label htmlFor="c-desc">Description (Optional)</Label>
             <Textarea
               id="c-desc"
-              placeholder="What kind of links are kept in this collection?"
+              placeholder="Brief description or purpose of this collection…"
               value={form.description}
               onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
               rows={2}

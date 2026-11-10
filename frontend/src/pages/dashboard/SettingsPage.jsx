@@ -105,7 +105,7 @@ const SettingsPage = () => {
               </Avatar>
               <div>
                 <p className="font-semibold text-foreground text-base">{user?.fullName || 'User'}</p>
-                <p className="text-sm text-muted-foreground">{user?.email || 'user@example.com'}</p>
+                <p className="text-sm text-muted-foreground">{user?.email || 'Active account'}</p>
               </div>
             </div>
 
@@ -155,7 +155,7 @@ const SettingsPage = () => {
                       setPassErrors((p) => ({ ...p, currentPassword: '' }));
                     }}
                     className={`pr-10 ${passErrors.currentPassword ? 'border-destructive' : ''}`}
-                    placeholder="••••••••"
+                    placeholder="Enter current password"
                   />
                   <button
                     type="button"
@@ -179,7 +179,7 @@ const SettingsPage = () => {
                     setPassErrors((p) => ({ ...p, newPassword: '' }));
                   }}
                   className={passErrors.newPassword ? 'border-destructive' : ''}
-                  placeholder="••••••••"
+                  placeholder="Enter new password (min 6 characters)"
                 />
                 {passErrors.newPassword && <p className="text-xs text-destructive">{passErrors.newPassword}</p>}
               </div>
@@ -195,7 +195,7 @@ const SettingsPage = () => {
                     setPassErrors((p) => ({ ...p, confirmPassword: '' }));
                   }}
                   className={passErrors.confirmPassword ? 'border-destructive' : ''}
-                  placeholder="••••••••"
+                  placeholder="Confirm new password"
                 />
                 {passErrors.confirmPassword && <p className="text-xs text-destructive">{passErrors.confirmPassword}</p>}
               </div>
