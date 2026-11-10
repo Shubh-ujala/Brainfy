@@ -1,0 +1,158 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Reflect / Notion Warm Studio - Light Mode */
+    --background: 40 20% 98.4%;       /* #FAF9F5 Warm paper background */
+    --foreground: 20 10% 12%;         /* #1F1D1B Deep ink text */
+
+    --card: 0 0% 100%;                /* Pure white surface */
+    --card-foreground: 20 10% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 10% 12%;
+
+    --primary: 20 10% 12%;            /* Deep ink button (Apple/Notion style) */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 40 15% 94%;          /* #F3F2EE Warm stone */
+    --secondary-foreground: 20 10% 12%;
+
+    --muted: 40 15% 94%;
+    --muted-foreground: 30 5% 45%;    /* #73706B Editorial warm gray */
+
+    --accent: 158 40% 42%;            /* Subtle warm emerald accent */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 35 12% 89%;             /* #E6E4DF Warm paper border */
+    --input: 35 12% 89%;
+    --ring: 20 10% 12%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark,
+  [data-theme="dark"] {
+    /* Reflect / Notion Warm Studio - Dark Mode */
+    --background: 30 6% 8.5%;         /* #151413 Warm obsidian */
+    --foreground: 40 15% 93%;         /* #F0EFEA Soft bone white */
+
+    --card: 30 5% 11.5%;              /* #1E1D1B Warm elevated slate */
+    --card-foreground: 40 15% 93%;
+
+    --popover: 30 5% 11.5%;
+    --popover-foreground: 40 15% 93%;
+
+    --primary: 40 15% 93%;            /* Bone white button */
+    --primary-foreground: 30 6% 8.5%;
+
+    --secondary: 30 5% 16%;           /* #2A2826 Subtle stone */
+    --secondary-foreground: 40 15% 93%;
+
+    --muted: 30 5% 16%;
+    --muted-foreground: 35 8% 60%;    /* #9C9890 Muted warm gray */
+
+    --accent: 158 45% 55%;            /* Warm emerald highlight */
+    --accent-foreground: 30 6% 8.5%;
+
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 40 15% 93%;
+
+    --border: 30 6% 18%;              /* #302E2B Crisp quiet border */
+    --input: 30 6% 18%;
+    --ring: 40 15% 93%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    background-image: 
+      linear-gradient(to right, hsl(var(--border) / 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.55) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-attachment: fixed;
+  }
+
+  /* Custom subtle scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.25);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.4);
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Grid pattern utilities */
+  .bg-grid {
+    background-image: 
+      linear-gradient(to right, hsl(var(--border) / 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.55) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  .bg-grid-sm {
+    background-image: 
+      linear-gradient(to right, hsl(var(--border) / 0.45) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.45) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  .bg-dot-grid {
+    background-image: radial-gradient(hsl(var(--border) / 0.6) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Radial fade mask for heroes or widgets */
+  .mask-radial {
+    mask-image: radial-gradient(ellipse at center, black 50%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 50%, transparent 90%);
+  }
+
+  .nav-link {
+    @apply flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground
+           transition-all duration-150 hover:bg-muted hover:text-foreground active:scale-[0.98] cursor-pointer;
+  }
+
+  .nav-link:hover svg {
+    @apply transition-transform duration-150 scale-105;
+  }
+
+  .nav-link.active {
+    @apply bg-secondary text-foreground font-semibold;
+  }
+}
